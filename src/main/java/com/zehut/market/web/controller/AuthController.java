@@ -30,19 +30,14 @@ public class AuthController {
     private JWTUtil jwtUtil;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> createToken(@RequestBody AuthenticationRequest request){
-
+    public ResponseEntity<AuthenticationResponse> createToken(@RequestBody AuthenticationRequest request) {
         try {
-
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request
-                    .getUsername(), request.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             UserDetails userDetails = zehutUserDetailsService.loadUserByUsername(request.getUsername());
             String jwt = jwtUtil.generateToken(userDetails);
 
             return new ResponseEntity<>(new AuthenticationResponse(jwt), HttpStatus.OK);
-
-        }catch (BadCredentialsException e){
-
+        } catch (BadCredentialsException e) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
